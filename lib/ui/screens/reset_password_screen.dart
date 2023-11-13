@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/ui/screens/forgotPasswordScreen.dart';
+import 'package:task_manager_app/ui/screens/loginScreen.dart';
 import 'package:task_manager_app/ui/screens/registrationScreen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
 import '../../Style/style.dart';
 
-class loginScreen extends StatefulWidget {
-  const loginScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
 
   @override
-  State<loginScreen> createState() => _loginScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _loginScreenState extends State<loginScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,20 +29,27 @@ class _loginScreenState extends State<loginScreen> {
                 height: 80,
               ),
               Text(
-                'Get Started With',
+                'Set Password',
                 style: headlineForm(colorDarkBlue),
               ),
               SizedBox(
-                height: 30,
+                height: 10,
+              ),
+              Text(
+                'Minimum length of must be 8 characters with letters and number combination',
+                style: forgotPassword(colorLightGray),
+              ),
+              SizedBox(
+                height: 10,
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Password'),
               ),
               SizedBox(
                 height: 20,
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Confirm Password'),
               ),
               SizedBox(
                 height: 40,
@@ -50,41 +58,24 @@ class _loginScreenState extends State<loginScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {},
-                  child: Icon(Icons.arrow_circle_right_outlined,),
+                  child: Icon(Icons.arrow_circle_right_outlined),
                   style: formButtonStyle(),
                 ),
               ),
               SizedBox(
                 height: 60,
               ),
-              Center(
-                child: InkWell(
-                  child: Text(
-                    'Forgot Password ?',
-                    style: forgotPassword(colorLightGray),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => forgotPasswordScreen()));
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account ?",
+                    "Have an account ?",
                     style: formBottom(colorDarkBlue),
                   ),
                   InkWell(
                     child: Text(
-                      ' Sign Up',
+                      ' Sign In',
                       style: signUp(colorGreen),
                     ),
                     onTap: () {
@@ -92,7 +83,7 @@ class _loginScreenState extends State<loginScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const registrationScreen()));
+                                  const loginScreen()));
                     },
                   )
                 ],

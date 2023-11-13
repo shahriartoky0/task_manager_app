@@ -18,9 +18,11 @@ class _splashScreenState extends State<splashScreen> {
   }
 
   void goToLogin() {
-    Future.delayed(Duration(
-      seconds: 2,
-    )).then((value) {
+    Future.delayed(
+      Duration(
+        seconds: 2,
+      ),
+    ).then((value) {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(

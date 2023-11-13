@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/ui/screens/forgotPasswordScreen.dart';
+import 'package:task_manager_app/ui/screens/loginScreen.dart';
+import 'package:task_manager_app/ui/screens/pin_verification_screen.dart';
 import 'package:task_manager_app/ui/screens/registrationScreen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
 import '../../Style/style.dart';
 
-class loginScreen extends StatefulWidget {
-  const loginScreen({super.key});
+class forgotPasswordScreen extends StatefulWidget {
+  const forgotPasswordScreen({super.key});
 
   @override
-  State<loginScreen> createState() => _loginScreenState();
+  State<forgotPasswordScreen> createState() => _forgotPasswordScreenState();
 }
 
-class _loginScreenState extends State<loginScreen> {
+class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,71 +29,59 @@ class _loginScreenState extends State<loginScreen> {
                 height: 80,
               ),
               Text(
-                'Get Started With',
+                'Your Email Address',
                 style: headlineForm(colorDarkBlue),
               ),
               SizedBox(
-                height: 30,
+                height: 10,
               ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
+              Text(
+                'A 6 digit verification pin will send to your email address',
+                style: forgotPassword(colorLightGray),
               ),
               SizedBox(
                 height: 20,
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Email'),
               ),
               SizedBox(
-                height: 40,
+                height: 30,
               ),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
-                  child: Icon(Icons.arrow_circle_right_outlined,),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => pin_verification_screen()));
+                  },
+                  child: Icon(Icons.arrow_circle_right_outlined),
                   style: formButtonStyle(),
                 ),
               ),
               SizedBox(
                 height: 60,
               ),
-              Center(
-                child: InkWell(
-                  child: Text(
-                    'Forgot Password ?',
-                    style: forgotPassword(colorLightGray),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => forgotPasswordScreen()));
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account ?",
+                    "Have account?",
                     style: formBottom(colorDarkBlue),
                   ),
                   InkWell(
                     child: Text(
-                      ' Sign Up',
+                      ' Sign In',
                       style: signUp(colorGreen),
                     ),
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  const registrationScreen()));
+                              builder: (context) => const loginScreen()));
                     },
                   )
                 ],
