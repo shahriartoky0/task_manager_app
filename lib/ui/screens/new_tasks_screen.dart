@@ -33,29 +33,32 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    SummaryCard(
-                      count: '09',
-                      title: 'Canceled',
-                    ),
-                    SummaryCard(
-                      count: '13',
-                      title: 'Completed',
-                    ),
-                    SummaryCard(
-                      count: '7',
-                      title: 'Progress',
-                    ),
-                    SummaryCard(
-                      count: '5',
-                      title: 'New Task',
-                    ),
-                    SummaryCard(
-                      count: '2',
-                      title: 'New Task',
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: [
+                      SummaryCard(
+                        count: '09',
+                        title: 'Canceled',
+                      ),
+                      SummaryCard(
+                        count: '13',
+                        title: 'Completed',
+                      ),
+                      SummaryCard(
+                        count: '7',
+                        title: 'Progress',
+                      ),
+                      SummaryCard(
+                        count: '5',
+                        title: 'New Task',
+                      ),
+                      SummaryCard(
+                        count: '2',
+                        title: 'New Task',
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(
