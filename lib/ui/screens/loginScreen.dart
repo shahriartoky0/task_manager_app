@@ -3,6 +3,7 @@ import 'package:task_manager_app/ui/screens/forgotPasswordScreen.dart';
 import 'package:task_manager_app/ui/screens/registrationScreen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
 import '../../Style/style.dart';
+import 'main_bottom_nav_screen.dart';
 
 class loginScreen extends StatefulWidget {
   const loginScreen({super.key});
@@ -49,8 +50,15 @@ class _loginScreenState extends State<loginScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
-                  child: Icon(Icons.arrow_circle_right_outlined,),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MainBottomNavScreen()));
+                  },
+                  child: Icon(
+                    Icons.arrow_circle_right_outlined,
+                  ),
                   style: formButtonStyle(),
                 ),
               ),

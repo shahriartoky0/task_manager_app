@@ -46,6 +46,39 @@ TextStyle signUp(textColor) {
     color: textColor,
   );
 }
+TextStyle profileAppHeading(textColor) {
+  return TextStyle(
+    fontSize: 18,
+    fontFamily: 'poppins',
+    fontWeight: FontWeight.w600,
+    color: textColor,
+  );
+}
+TextStyle profileAppSubtitle(textColor) {
+  return TextStyle(
+    fontSize: 14,
+    fontFamily: 'poppins',
+    fontWeight: FontWeight.w300,
+    color: textColor,
+  );
+}
+TextStyle cardHeader(textColor) {
+  return TextStyle(
+    fontSize: 20,
+    fontFamily: 'poppins',
+    fontWeight: FontWeight.w600,
+    color: textColor,
+  );
+}
+TextStyle cardText(textColor) {
+  return TextStyle(
+    fontSize: 14,
+    fontFamily: 'poppins',
+    fontWeight: FontWeight.w600,
+    color: textColor,
+  );
+}
+
 
 //----------------------------------Button Style -----------
 ButtonStyle formButtonStyle() {

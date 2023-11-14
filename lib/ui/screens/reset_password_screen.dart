@@ -58,8 +58,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {},
-                  child: Icon(Icons.arrow_circle_right_outlined),
                   style: formButtonStyle(),
+                  child:  Text('Confirm',style: TextStyle(fontSize: 16),),
                 ),
               ),
               SizedBox(
