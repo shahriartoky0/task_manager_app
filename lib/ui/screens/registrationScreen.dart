@@ -197,15 +197,18 @@ class _registrationScreenState extends State<registrationScreen> {
     }
     return null;
   }
+
   // validate Email Address
   String? isEmailValid(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Please enter your email';
-    } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(value)) {
+    } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
+        .hasMatch(value)) {
       return 'Please enter a valid email address';
     }
     return null;
   }
+
 // validate Phone Number
   String? isPhoneNumberValid(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -215,7 +218,6 @@ class _registrationScreenState extends State<registrationScreen> {
     }
     return null;
   }
-
 
   @override
   void dispose() {
