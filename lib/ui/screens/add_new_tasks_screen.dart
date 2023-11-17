@@ -40,7 +40,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                             height: 30,
                           ),
                           TextFormField(
-                            decoration: const InputDecoration(labelText: 'Email'),
+                            decoration: const InputDecoration(labelText: 'Title'),
                           ),
                           SizedBox(
                             height: 20,
