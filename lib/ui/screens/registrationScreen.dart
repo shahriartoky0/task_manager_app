@@ -54,6 +54,7 @@ class _registrationScreenState extends State<registrationScreen> {
                     return isEmailValid(value);
                   },
                   decoration: const InputDecoration(labelText: 'Email'),
+                  textInputAction: TextInputAction.next,
                 ),
                 SizedBox(
                   height: 20,
@@ -64,6 +65,7 @@ class _registrationScreenState extends State<registrationScreen> {
                     return isValidate(value, 'First Name');
                   },
                   decoration: const InputDecoration(labelText: 'First Name'),
+                  textInputAction: TextInputAction.next,
                 ),
                 SizedBox(
                   height: 20,
@@ -74,6 +76,7 @@ class _registrationScreenState extends State<registrationScreen> {
                     return isValidate(value, 'Last Name');
                   },
                   decoration: const InputDecoration(labelText: 'Last Name'),
+                  textInputAction: TextInputAction.next,
                 ),
                 SizedBox(
                   height: 20,
@@ -85,6 +88,7 @@ class _registrationScreenState extends State<registrationScreen> {
                     return isPhoneNumberValid(value);
                   },
                   decoration: const InputDecoration(labelText: 'Mobile'),
+                  textInputAction: TextInputAction.next,
                 ),
                 SizedBox(
                   height: 20,

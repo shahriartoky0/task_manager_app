@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_manager_app/data/models/user_model.dart';
 import 'package:task_manager_app/data/network_caller/network_caller.dart';
 import 'package:task_manager_app/data/network_caller/network_response.dart';
+import 'package:task_manager_app/ui/controller/auth_controller.dart';
 import 'package:task_manager_app/ui/screens/forgotPasswordScreen.dart';
 import 'package:task_manager_app/ui/screens/registrationScreen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
@@ -50,6 +51,7 @@ class _loginScreenState extends State<loginScreen> {
                 ),
                 TextFormField(
                     decoration: const InputDecoration(labelText: 'Email'),
+                    textInputAction: TextInputAction.next,
                     controller: _emailTEController,
                     validator: (value) {
                       return isEmailValid(value);
@@ -141,43 +143,51 @@ class _loginScreenState extends State<loginScreen> {
 
   // API Request Handle
   Future<void> _signIn() async {
-    signInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    final NetworkResponse response =
-        await NetworkCaller().postRequest(Urls.login, body: {
-      "email": _emailTEController.text.trim(),
-      "password": _passwordTEController.text.trim()
-    });
-    signInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
-    if (response.isSuccess) {
-      clearTextFields();
-      SharedPreferences sharedPreferences =await SharedPreferences.getInstance();
-      await sharedPreferences.setString('token', response.jsonResponse!['token']);
-
+    if (_formKey.currentState!.validate()) {
+      signInProgress = true;
       if (mounted) {
-        {
-          Navigator.push(
+        setState(() {});
+      }
+      final NetworkResponse response =
+          await NetworkCaller().postRequest(Urls.login, body: {
+        "email": _emailTEController.text.trim(),
+        "password": _passwordTEController.text.trim()
+      });
+      signInProgress = false;
+      if (mounted) {
+        setState(() {});
+      }
+      if (response.isSuccess) {
+        clearTextFields();
+        await AuthController.saveUserInformation(
+          response.jsonResponse?['token'],
+          UserModel.fromJson(response.jsonResponse?['data']),
+        );
+        signInProgress = true;
+        if (mounted) {
+          setState(() {});
+        }
+
+        if (mounted) {
+          {
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (context) => const MainBottomNavScreen()));
-        }
-      }
-    } else {
-      if (response.statusCode == 401) {
-        if (mounted) {
-          showSnackMessage(context, 'Incorrect Username or Password!', true);
+                  builder: (context) => const MainBottomNavScreen()),
+                  (route) => false,
+            );
+            showSnackMessage(context, 'Successfully Logged in');
+          }
         }
       } else {
-        if (mounted) {
-          showSnackMessage(context, 'Login Failed! Please Try again', true);
+        if (response.statusCode == 401) {
+          if (mounted) {
+            showSnackMessage(context, 'Incorrect Username or Password!', true);
+          }
+        } else {
+          if (mounted) {
+            showSnackMessage(context, 'Login Failed! Please Try again', true);
+          }
         }
       }
     }
