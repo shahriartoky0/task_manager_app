@@ -225,11 +225,11 @@ class _registrationScreenState extends State<registrationScreen> {
 
   @override
   void dispose() {
-    _emailTEController.dispose(); // TODO: implement dispose
-    _firstNameTEController.dispose(); // TODO: implement dispose
-    _lastNameTEController.dispose(); // TODO: implement dispose
-    _mobileNameTEController.dispose(); // TODO: implement dispose
-    _passwordNameTEController.dispose(); // TODO: implement dispose
+    _emailTEController.dispose();
+    _firstNameTEController.dispose();
+    _lastNameTEController.dispose();
+    _mobileNameTEController.dispose();
+    _passwordNameTEController.dispose();
     super.dispose();
   }
 }

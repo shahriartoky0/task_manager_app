@@ -16,22 +16,25 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-          child: Column(
-            children: [
-              ProfileAppBar(),
-              SizedBox(
-                height: 5,
-              ),
-              Expanded(
-                  child: bodyBackground(
-                    child: ListView.separated(
-                      itemCount: 10,
-                      itemBuilder: (context, builder) => TaskItemCard(),
-                      separatorBuilder: (_, __) => Divider(),
-                    ),
-                  ))
-            ],
+      child: Column(
+        children: [
+          ProfileAppBar(),
+          SizedBox(
+            height: 5,
           ),
-        ));
+          Expanded(
+              child: bodyBackground(
+            child: ListView.separated(
+              itemCount: 10,
+              itemBuilder: (context, builder) {
+               // return TaskItemCard()
+
+              },
+              separatorBuilder: (_, __) => Divider(),
+            ),
+          ))
+        ],
+      ),
+    ));
   }
 }

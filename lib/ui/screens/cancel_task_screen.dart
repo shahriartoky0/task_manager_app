@@ -26,7 +26,10 @@ class _CancelTaskScreenState extends State<CancelTaskScreen> {
                   child: bodyBackground(
                     child: ListView .separated(
                       itemCount: 10,
-                      itemBuilder: (context, builder) => TaskItemCard(),
+                      itemBuilder: (context, builder) {
+                        // return TaskItemCard()
+
+                      },
                       separatorBuilder: (_, __) => Divider(),
                     ),
                   ))

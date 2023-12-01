@@ -14,6 +14,7 @@ class InProgressScreen extends StatefulWidget {
 class _InProgressScreenState extends State<InProgressScreen> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         body: SafeArea(
           child: Column(
@@ -26,7 +27,10 @@ class _InProgressScreenState extends State<InProgressScreen> {
                   child: bodyBackground(
                     child: ListView.separated(
                       itemCount: 10,
-                      itemBuilder: (context, builder) => TaskItemCard(),
+                      itemBuilder: (context, builder) {
+                        // return TaskItemCard()
+
+                      },
                       separatorBuilder: (_, __) => Divider(),
                     ),
                   ))
