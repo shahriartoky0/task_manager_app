@@ -86,22 +86,30 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                 height: 5,
               ),
               Visibility(
-                visible: taskCountLoad == false,
-                replacement: const Center(child: CircularProgressIndicator(),),
+                visible: taskCountLoad == false &&
+                    (taskListCountModel.taskListCountList?.isNotEmpty ?? false),
+                replacement: const Center(
+                  child: CircularProgressIndicator(),
+                ),
                 child: SizedBox(
                   height: 100,
                   child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
+                      scrollDirection: Axis.horizontal,
                       itemCount:
                           taskListCountModel.taskListCountList?.length ?? 0,
                       itemBuilder: (context, index) {
-                      TaskCount taskCount = taskListCountModel.taskListCountList![index];
+                        TaskCount taskCount =
+                            taskListCountModel.taskListCountList![index];
                         return FittedBox(
-                            child: SummaryCard(count: taskCount.sId.toString() , title: taskCount.sum.toString()));
+                            child: SummaryCard(
+                                count: taskCount.sId.toString(),
+                                title: taskCount.sum.toString()));
                       }),
                 ),
               ),
-              SizedBox(height: 8,),
+              SizedBox(
+                height: 8,
+              ),
               Expanded(
                   child: bodyBackground(
                 child: Visibility(
@@ -109,12 +117,30 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                   replacement: const Center(
                     child: CircularProgressIndicator(),
                   ),
-                  child: ListView.separated(
-                    itemCount: taskListModel.taskList?.length ?? 0,
-                    itemBuilder: (context, index) => TaskItemCard(
-                      task: taskListModel.taskList![index],
+                  child: RefreshIndicator(
+                    onRefresh: () async
+                    {
+                      getNewTaskList();
+                      getTaskListCount();
+                    },
+                    child: ListView.separated(
+                      itemCount: taskListModel.taskList?.length ?? 0,
+                      itemBuilder: (context, index) => TaskItemCard(
+                        task: taskListModel.taskList![index],
+                        showProgress: (inProgress) {
+                          newTaskLoad = inProgress;
+                          taskCountLoad =inProgress;
+                          if (mounted) {
+                            setState(() {});
+                          }
+                        },
+                        onStatusChange: () {
+                          getNewTaskList();
+                          getTaskListCount();
+                        },
+                      ),
+                      separatorBuilder: (_, __) => Divider(),
                     ),
-                    separatorBuilder: (_, __) => Divider(),
                   ),
                 ),
               ))
