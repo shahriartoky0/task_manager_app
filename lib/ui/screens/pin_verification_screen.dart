@@ -4,15 +4,16 @@ import 'package:task_manager_app/ui/screens/loginScreen.dart';
 import 'package:task_manager_app/ui/screens/registrationScreen.dart';
 import 'package:task_manager_app/ui/screens/reset_password_screen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
+import 'package:task_manager_app/ui/widgets/smack_message.dart';
 import '../../Style/style.dart';
 import '../../data/network_caller/network_caller.dart';
 import '../../data/network_caller/network_response.dart';
 import '../../data/utility/urls.dart';
 
 class pin_verification_screen extends StatefulWidget {
-   pin_verification_screen({super.key, required this.email});
+  pin_verification_screen({super.key, required this.email});
 
-  final String email ;
+  final String email;
 
   @override
   State<pin_verification_screen> createState() =>
@@ -20,6 +21,8 @@ class pin_verification_screen extends StatefulWidget {
 }
 
 class _pin_verification_screenState extends State<pin_verification_screen> {
+  String enteredPin = '';
+  bool otpLoader = false;
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +68,16 @@ class _pin_verification_screenState extends State<pin_verification_screen> {
                   // after giving input color
                   selectedFillColor: colorWhite,
                   inactiveFillColor: colorWhite,
-
                 ),
                 animationDuration: const Duration(milliseconds: 300),
                 enableActiveFill: true,
                 onCompleted: (v) {
                   print("Completed");
                 },
-                onChanged: (value) {},
+                onChanged: (value) {
+                  enteredPin = value;
+                  setState(() {});
+                },
                 beforeTextPaste: (text) {
                   return true;
                 },
@@ -83,22 +88,48 @@ class _pin_verification_screenState extends State<pin_verification_screen> {
               ),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  style: formButtonStyle(),
-                  onPressed: () async {
-                    final NetworkResponse response =
-                        await NetworkCaller().postRequest(
-                      Urls.verifyOTP(widget.email,),
-                    );
-
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ResetPasswordScreen()));
-                  },
-                  child: const Text(
-                    'Verify',
-                    style: TextStyle(fontSize: 16),
+                child: Visibility(
+                  replacement: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  visible: otpLoader == false,
+                  child: ElevatedButton(
+                    style: formButtonStyle(),
+                    onPressed: () async {
+                      otpLoader = true;
+                      if (mounted) {
+                        setState(() {});
+                      }
+                      final NetworkResponse response =
+                          await NetworkCaller().getRequest(
+                        Urls.verifyOTP(widget.email, enteredPin),
+                      );
+                      otpLoader = false;
+                      if (mounted) {
+                        setState(() {});
+                      }
+                      if (response.jsonResponse!['status'] == 'success') {
+                        if (mounted) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ResetPasswordScreen(
+                                        values: {
+                                          'email': widget.email,
+                                          'otp': enteredPin
+                                        },
+                                      )));
+                        }
+                      } else {
+                        if (mounted) {
+                          showSnackMessage(context, 'Invalid OTP',true);
+                        }
+                      }
+                    },
+                    child: const Text(
+                      'Verify',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
                 ),
               ),

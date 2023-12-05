@@ -18,6 +18,7 @@ class forgotPasswordScreen extends StatefulWidget {
 class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool forgotPasswordLoader = false ;
 
   @override
   Widget build(BuildContext context) {
@@ -62,29 +63,48 @@ class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        final NetworkResponse response =
-                            await NetworkCaller().postRequest(
-                          Urls.verifyEmail(_emailTEController.text.trim()),
-                        );
+                  child: Visibility(
+                    replacement: const Center(child: CircularProgressIndicator(),),
+                    visible: forgotPasswordLoader == false,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          forgotPasswordLoader = true ;
+                          if(mounted)
+                            {
+                              setState(() {});
+                            }
 
-                        if (response.isSuccess) {
-                          if (mounted) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                         pin_verification_screen(
-                                          email: _emailTEController.text.trim(),
-                                        )));
+                          final NetworkResponse response =
+                              await NetworkCaller().getRequest(
+                            Urls.verifyEmail(_emailTEController.text.trim()),
+                          );
+                          forgotPasswordLoader = false ;
+                          if(mounted)
+                          {
+                            setState(() {});
+                          }
+                          if (response.isSuccess) {
+                            print('jojo');
+                            if (mounted) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          pin_verification_screen(
+                                            email: _emailTEController.text.trim(),
+                                          )));
+                            }
+                          } else {
+                            print(_emailTEController.text.trim());
+                            print(response.statusCode);
+
                           }
                         }
-                      }
-                    },
-                    child: Icon(Icons.arrow_circle_right_outlined),
-                    style: formButtonStyle(),
+                      },
+                      child: Icon(Icons.arrow_circle_right_outlined),
+                      style: formButtonStyle(),
+                    ),
                   ),
                 ),
                 SizedBox(

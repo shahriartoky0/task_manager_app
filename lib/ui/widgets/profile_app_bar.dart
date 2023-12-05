@@ -20,7 +20,8 @@ class ProfileAppBar extends StatefulWidget {
 }
 
 class _ProfileAppBarState extends State<ProfileAppBar> {
-  Uint8List imageBytes = const Base64Decoder().convert(AuthController.user?.photo ?? '');
+
+
   // @override
   // void initState() {
   //   AuthController.user ; // problem needs to be issued
@@ -28,6 +29,13 @@ class _ProfileAppBarState extends State<ProfileAppBar> {
   // }
   @override
   Widget build(BuildContext context) {
+    String base64String= AuthController.user?.photo ?? '';
+    if (base64String.startsWith('data:image'))
+      {
+        base64String = base64String.replaceFirst(RegExp(r'data:image/[^;]+;base64,'), '');
+      }
+  Uint8List imageBytes = const Base64Decoder().convert(base64String);
+
     return ListTile(
       leading: CircleAvatar(
         child: AuthController.user?.photo == null
