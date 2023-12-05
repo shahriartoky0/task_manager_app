@@ -28,7 +28,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ProfileAppBar(),
+            const ProfileAppBar(),
             Expanded(
               child: bodyBackground(
                 child: SingleChildScrollView(
@@ -41,14 +41,14 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               height: 30,
                             ),
                             Text(
                               ' Add New Task',
                               style: headlineForm(colorDarkBlue),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 30,
                             ),
                             TextFormField(
@@ -59,7 +59,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                               decoration:
                                   const InputDecoration(labelText: 'Title'),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
                             TextFormField(
@@ -72,7 +72,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                               ),
                               maxLines: 8,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 60,
                             ),
                             SizedBox(
@@ -86,7 +86,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                                   onPressed: addTheTask,
                                   style: formButtonStyle(),
                                   child:
-                                      Icon(Icons.arrow_circle_right_outlined),
+                                      const Icon(Icons.arrow_circle_right_outlined),
                                 ),
                               ),
                             ),

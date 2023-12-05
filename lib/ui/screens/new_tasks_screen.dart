@@ -70,7 +70,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           onPressed: () {
             Navigator.push(
                 context,
@@ -81,8 +81,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              ProfileAppBar(),
-              SizedBox(
+              const ProfileAppBar(),
+              const SizedBox(
                 height: 5,
               ),
               Visibility(
@@ -107,7 +107,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                       }),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Expanded(
@@ -139,7 +139,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                           getTaskListCount();
                         },
                       ),
-                      separatorBuilder: (_, __) => Divider(),
+                      separatorBuilder: (_, __) => const Divider(),
                     ),
                   ),
                 ),

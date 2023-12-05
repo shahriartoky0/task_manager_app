@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/ui/controller/auth_controller.dart';
 import 'package:task_manager_app/ui/screens/edit_profile_screen.dart';
@@ -17,16 +20,25 @@ class ProfileAppBar extends StatefulWidget {
 }
 
 class _ProfileAppBarState extends State<ProfileAppBar> {
-  @override
-  void initState() {
-    AuthController.user ; // problem needs to be issued
-    super.initState();
-  }
+  Uint8List imageBytes = const Base64Decoder().convert(AuthController.user?.photo ?? '');
+  // @override
+  // void initState() {
+  //   AuthController.user ; // problem needs to be issued
+  //   super.initState();
+  // }
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        child: Icon(Icons.account_circle_sharp),
+        child: AuthController.user?.photo == null
+            ? const Icon(Icons.person)
+            : ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: Image.memory(
+            imageBytes,
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
       title: Text(
         "${AuthController.user?.firstName ?? 'Name not Found'} ${AuthController.user?.lastName ?? ''}",

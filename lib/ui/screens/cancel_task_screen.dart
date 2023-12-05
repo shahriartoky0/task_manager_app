@@ -50,8 +50,8 @@ class _CancelTaskScreenState extends State<CancelTaskScreen> {
         body: SafeArea(
       child: Column(
         children: [
-          ProfileAppBar(),
-          SizedBox(
+          const ProfileAppBar(),
+          const SizedBox(
             height: 5,
           ),
           Expanded(
@@ -80,7 +80,7 @@ class _CancelTaskScreenState extends State<CancelTaskScreen> {
                       getCancelledTaskList();
                     },
                   ),
-                  separatorBuilder: (_, __) => Divider(),
+                  separatorBuilder: (_, __) => const Divider(),
                 ),
               ),
             ),

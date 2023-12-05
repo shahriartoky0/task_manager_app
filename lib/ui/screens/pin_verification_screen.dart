@@ -5,9 +5,14 @@ import 'package:task_manager_app/ui/screens/registrationScreen.dart';
 import 'package:task_manager_app/ui/screens/reset_password_screen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
 import '../../Style/style.dart';
+import '../../data/network_caller/network_caller.dart';
+import '../../data/network_caller/network_response.dart';
+import '../../data/utility/urls.dart';
 
 class pin_verification_screen extends StatefulWidget {
-  const pin_verification_screen({super.key});
+   pin_verification_screen({super.key, required this.email});
+
+  final String email ;
 
   @override
   State<pin_verification_screen> createState() =>
@@ -15,6 +20,7 @@ class pin_verification_screen extends StatefulWidget {
 }
 
 class _pin_verification_screenState extends State<pin_verification_screen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +65,7 @@ class _pin_verification_screenState extends State<pin_verification_screen> {
                   // after giving input color
                   selectedFillColor: colorWhite,
                   inactiveFillColor: colorWhite,
+
                 ),
                 animationDuration: const Duration(milliseconds: 300),
                 enableActiveFill: true,
@@ -78,7 +85,12 @@ class _pin_verification_screenState extends State<pin_verification_screen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: formButtonStyle(),
-                  onPressed: () {
+                  onPressed: () async {
+                    final NetworkResponse response =
+                        await NetworkCaller().postRequest(
+                      Urls.verifyOTP(widget.email,),
+                    );
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(

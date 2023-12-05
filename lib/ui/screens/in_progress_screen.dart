@@ -50,8 +50,8 @@ class _InProgressScreenState extends State<InProgressScreen> {
         body: SafeArea(
       child: Column(
         children: [
-          ProfileAppBar(),
-          SizedBox(
+          const ProfileAppBar(),
+          const SizedBox(
             height: 5,
           ),
           Expanded(
@@ -80,7 +80,7 @@ class _InProgressScreenState extends State<InProgressScreen> {
                       getInProgressTaskList();
                     },
                   ),
-                  separatorBuilder: (_, __) => Divider(),
+                  separatorBuilder: (_, __) => const Divider(),
                 ),
               ),
             ),

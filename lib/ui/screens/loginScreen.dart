@@ -39,14 +39,14 @@ class _loginScreenState extends State<loginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 80,
                 ),
                 Text(
                   'Get Started With',
                   style: headlineForm(colorDarkBlue),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 TextFormField(
@@ -56,7 +56,7 @@ class _loginScreenState extends State<loginScreen> {
                     validator: (value) {
                       return isEmailValid(value);
                     }),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
@@ -70,7 +70,7 @@ class _loginScreenState extends State<loginScreen> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 SizedBox(
@@ -82,14 +82,14 @@ class _loginScreenState extends State<loginScreen> {
                     ),
                     child: ElevatedButton(
                       onPressed: _signIn,
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_circle_right_outlined,
                       ),
                       style: formButtonStyle(),
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 60,
                 ),
                 Center(
@@ -107,7 +107,7 @@ class _loginScreenState extends State<loginScreen> {
                     },
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Row(

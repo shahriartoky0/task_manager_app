@@ -43,7 +43,7 @@ class _TaskItemCardState extends State<TaskItemCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       shadowColor: Colors.green,
       child: ListTile(
         title: Text(
@@ -54,14 +54,14 @@ class _TaskItemCardState extends State<TaskItemCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.task.description ?? 'No Description'),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Text(
               'Date: ${widget.task.createdDate} ',
               style: cardText(colorDarkBlue),
             ),
-            SizedBox(
+            const SizedBox(
               height: 3,
             ),
             Row(
@@ -69,15 +69,15 @@ class _TaskItemCardState extends State<TaskItemCard> {
                 Chip(
                   label: Text(
                     '${widget.task.status}',
-                    style: TextStyle(color: colorWhite),
+                    style: const TextStyle(color: colorWhite),
                   ),
                   backgroundColor: colorBlue,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 160,
                 ),
                 IconButton(
-                    onPressed: showUpdateStatusModal, icon: Icon(Icons.edit)),
+                    onPressed: showUpdateStatusModal, icon: const Icon(Icons.edit)),
                 // IconButton(onPressed: (){}, icon: Icon(Icons.delete)),
               ],
             )

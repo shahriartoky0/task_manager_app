@@ -163,7 +163,7 @@ class _registrationScreenState extends State<registrationScreen> {
         "email": _emailTEController.text.trim(),
         "firstName": _firstNameTEController.text.trim(),
         "lastName": _lastNameTEController.text.trim(),
-        "mobile": _emailTEController.text,
+        "mobile": _mobileNameTEController.text,
         "password": _passwordNameTEController.text.trim(),
       });
       _signUpInProgress = false;
