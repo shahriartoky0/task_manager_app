@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager_app/ui/widgets/smack_message.dart';
-
 import '../../Style/style.dart';
 import '../controller/auth_controller.dart';
 import '../screens/loginScreen.dart';
@@ -28,12 +28,9 @@ class LogoutDialogue extends StatelessWidget {
         TextButton(
             onPressed: () async {
               AuthController.clearAuthData();
+
               if (mounted) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const loginScreen()),
-                  (route) => false,
-                );
+                Get.offAll(const loginScreen());
 
                 showSnackMessage(
                     context, 'Successfully Logged Out. Sign in to continue');

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/ui/screens/forgotPasswordScreen.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_app/ui/controller/reset_password_controller.dart';
 import 'package:task_manager_app/ui/screens/loginScreen.dart';
-import 'package:task_manager_app/ui/screens/registrationScreen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
 import 'package:task_manager_app/ui/widgets/smack_message.dart';
 import '../../Style/style.dart';
-import '../../data/network_caller/network_caller.dart';
-import '../../data/network_caller/network_response.dart';
-import '../../data/utility/urls.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key, required this.values});
@@ -23,7 +20,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _confirmPasswordTEController =
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool resetPasswordLoader = false ;
+  final ResetPasswordController _resetPasswordController =
+      Get.find<ResetPasswordController>();
+  bool resetPasswordLoader = false;
 
   @override
   Widget build(BuildContext context) {
@@ -79,57 +78,53 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: Visibility(
-                    replacement: const Center(child: CircularProgressIndicator(),),
-                    visible: resetPasswordLoader == false ,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          if (_passwordTEController.text !=
-                              _confirmPasswordTEController.text) {
-                            if (mounted) {
-                              showSnackMessage(context, 'Passwords do not match', true);
-                            }
-                            return;
-
-                          }
-                          resetPasswordLoader = true ;
-                          if (mounted)
-                            {
-                              setState(() {});
-                            }
-                          final NetworkResponse response = await NetworkCaller()
-                              .postRequest(Urls.recoverPassword, body: {
-                            "email": widget.values['email'],
-                            "OTP": widget.values['otp'],
-                            "password": _passwordTEController.text
-                          });
-
-                          resetPasswordLoader = false  ;
-                          if (mounted)
-                          {
-                            setState(() {});
-                          }
-                          if (response.isSuccess) {
-                            if (mounted) {
-                              showSnackMessage(
-                                  context, 'Password Successfully Changed');
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const loginScreen()),
-                                  (route) => false);
-                            }
-                          }
-                        }
-                      },
-                      style: formButtonStyle(),
-                      child: const Text(
-                        'Confirm',
-                        style: TextStyle(fontSize: 16),
+                  child: GetBuilder<ResetPasswordController>(
+                      builder: (resetPasswordController) {
+                    return Visibility(
+                      replacement: const Center(
+                        child: CircularProgressIndicator(),
                       ),
-                    ),
-                  ),
+                      visible:
+                          resetPasswordController.resetPasswordLoader == false,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            if (_passwordTEController.text !=
+                                _confirmPasswordTEController.text) {
+                              if (mounted) {
+                                showSnackMessage(
+                                    context, 'Passwords do not match', true);
+                              }
+                              return;
+                            }
+                            String email = widget.values['email'];
+                            String otp = widget.values['otp'];
+                            final response =
+                                await _resetPasswordController.resetPassword(
+                                    email, otp, _passwordTEController.text);
+
+                            if (response) {
+                              if (mounted) {
+                                showSnackMessage(
+                                    context, _resetPasswordController.message);
+                                Get.offAll(const loginScreen());
+                              }
+                            } else {
+                              if (mounted) {
+                                showSnackMessage(context,
+                                    _resetPasswordController.message, true);
+                              }
+                            }
+                          }
+                        },
+                        style: formButtonStyle(),
+                        child: const Text(
+                          'Confirm',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    );
+                  }),
                 ),
                 const SizedBox(
                   height: 60,
@@ -148,10 +143,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         style: signUp(colorGreen),
                       ),
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const loginScreen()));
+                        Get.to(const loginScreen());
                       },
                     )
                   ],

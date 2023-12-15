@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:task_manager_app/ui/widgets/profile_app_bar.dart';
-
 import '../../Style/style.dart';
 import '../../data/models/user_model.dart';
 import '../../data/network_caller/network_caller.dart';
@@ -12,7 +11,7 @@ import '../../data/utility/urls.dart';
 import '../controller/auth_controller.dart';
 import '../widgets/bodyBackground.dart';
 import '../widgets/smack_message.dart';
-import 'loginScreen.dart';
+
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -30,16 +29,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey= GlobalKey<FormState>();
 
+  AuthController authController = Get.find<AuthController>();
+
   bool _updateProfileInProgress = false ;
   XFile? photo;
 
   @override
   void initState() {
     super.initState();
-    _emailTEController.text = AuthController.user?.email ?? '';
-    _firstNameTEController.text = AuthController.user?.firstName ?? '';
-    _lastNameTEController.text = AuthController.user?.lastName ?? '';
-    _mobileTEController.text = AuthController.user?.mobile ?? '';
+    _emailTEController.text = authController.user?.email ?? '';
+    _firstNameTEController.text = authController.user?.firstName ?? '';
+    _lastNameTEController.text = authController.user?.lastName ?? '';
+    _mobileTEController.text = authController.user?.mobile ?? '';
   }
   @override
   Widget build(BuildContext context) {
@@ -243,12 +244,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       setState(() {});
     }
     if (response.isSuccess) {
-      AuthController.updateUserInformation(UserModel(
+      Get.find<AuthController>().updateUserInformation(UserModel(
           email: _emailTEController.text.trim(),
           firstName: _firstNameTEController.text.trim(),
           lastName: _lastNameTEController.text.trim(),
           mobile: _mobileTEController.text.trim(),
-          photo: photoInBase64 ?? AuthController.user?.photo
+          photo: photoInBase64 ?? authController.user?.photo
 
       ));
       if (mounted) {

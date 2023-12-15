@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/data/models/user_model.dart';
-import 'package:task_manager_app/data/network_caller/network_caller.dart';
-import 'package:task_manager_app/data/network_caller/network_response.dart';
-import 'package:task_manager_app/ui/controller/auth_controller.dart';
+import 'package:get/get.dart';
 import 'package:task_manager_app/ui/screens/forgotPasswordScreen.dart';
 import 'package:task_manager_app/ui/screens/registrationScreen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
 import 'package:task_manager_app/ui/widgets/smack_message.dart';
 import '../../Style/style.dart';
-import '../../data/utility/urls.dart';
+import '../controller/login_controller.dart';
 import 'main_bottom_nav_screen.dart';
 
 class loginScreen extends StatefulWidget {
@@ -22,6 +19,7 @@ class _loginScreenState extends State<loginScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final LoginController _loginController = Get.find<LoginController>();
 
   bool signInProgress = false;
 
@@ -75,18 +73,22 @@ class _loginScreenState extends State<loginScreen> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: Visibility(
-                    visible: signInProgress == false,
-                    replacement: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: _signIn,
-                      child: const Icon(
-                        Icons.arrow_circle_right_outlined,
-                      ),
-                      style: formButtonStyle(),
-                    ),
+                  child: GetBuilder<LoginController>(
+                    builder: (loginController) {
+                      return Visibility(
+                        visible: loginController.loginInProgress == false,
+                        replacement: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: _signIn,
+                          style: formButtonStyle(),
+                          child: const Icon(
+                            Icons.arrow_circle_right_outlined,
+                          ),
+                        ),
+                      );
+                    }
                   ),
                 ),
                 const SizedBox(
@@ -99,11 +101,8 @@ class _loginScreenState extends State<loginScreen> {
                       style: forgotPassword(colorLightGray),
                     ),
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const forgotPasswordScreen()));
+                      Get.to(const forgotPasswordScreen());
+
                     },
                   ),
                 ),
@@ -144,50 +143,17 @@ class _loginScreenState extends State<loginScreen> {
   // API Request Handle
   Future<void> _signIn() async {
     if (_formKey.currentState!.validate()) {
-      signInProgress = true;
-      if (mounted) {
-        setState(() {});
-      }
-      final NetworkResponse response =
-          await NetworkCaller().postRequest(Urls.login, body: {
-        "email": _emailTEController.text.trim(),
-        "password": _passwordTEController.text.trim()
-      }, isLogin: true);
-      signInProgress = false;
-      if (mounted) {
-        setState(() {});
-      }
-      if (response.isSuccess) {
-        clearTextFields();
-        await AuthController.saveUserInformation(
-          response.jsonResponse?['token'],
-          UserModel.fromJson(response.jsonResponse?['data']),
-        );
-        signInProgress = true;
-        if (mounted) {
-          setState(() {});
-        }
+      final response = await _loginController.signIn(
+          _emailTEController.text.trim(), _passwordTEController.text);
 
-        if (mounted) {
-          {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const MainBottomNavScreen()),
-                  (route) => false,
-            );
-            showSnackMessage(context, 'Successfully Logged in');
-          }
-        }
+      if (response) {
+        clearTextFields();
+        Get.offAll( const MainBottomNavScreen());
+
+
       } else {
-        if (response.statusCode == 401) {
-          if (mounted) {
-            showSnackMessage(context, 'Incorrect Username or Password!', true);
-          }
-        } else {
-          if (mounted) {
-            showSnackMessage(context, 'Login Failed! Please Try again', true);
-          }
+        if (mounted) {
+          showSnackMessage(context, _loginController.failureMessage, true);
         }
       }
     }

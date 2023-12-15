@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/data/network_caller/network_caller.dart';
-import 'package:task_manager_app/data/network_caller/network_response.dart';
+import 'package:get/get.dart';
 import 'package:task_manager_app/ui/screens/loginScreen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
 import '../../Style/style.dart';
-import '../../data/utility/urls.dart';
+import '../controller/registration_controller.dart';
 import '../widgets/smack_message.dart';
 
 class registrationScreen extends StatefulWidget {
@@ -22,7 +21,8 @@ class _registrationScreenState extends State<registrationScreen> {
   final TextEditingController _passwordNameTEController =
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _signUpInProgress = false;
+  final RegistrationController _registrationController =
+      Get.find<RegistrationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +38,14 @@ class _registrationScreenState extends State<registrationScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 80,
                 ),
                 Text(
                   'Join With Us',
                   style: headlineForm(colorDarkBlue),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 TextFormField(
@@ -56,7 +56,7 @@ class _registrationScreenState extends State<registrationScreen> {
                   decoration: const InputDecoration(labelText: 'Email'),
                   textInputAction: TextInputAction.next,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
@@ -67,7 +67,7 @@ class _registrationScreenState extends State<registrationScreen> {
                   decoration: const InputDecoration(labelText: 'First Name'),
                   textInputAction: TextInputAction.next,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
@@ -78,7 +78,7 @@ class _registrationScreenState extends State<registrationScreen> {
                   decoration: const InputDecoration(labelText: 'Last Name'),
                   textInputAction: TextInputAction.next,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
@@ -90,7 +90,7 @@ class _registrationScreenState extends State<registrationScreen> {
                   decoration: const InputDecoration(labelText: 'Mobile'),
                   textInputAction: TextInputAction.next,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
@@ -101,23 +101,27 @@ class _registrationScreenState extends State<registrationScreen> {
                   },
                   decoration: const InputDecoration(labelText: 'Password'),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 60,
                 ),
                 SizedBox(
                     width: double.infinity,
-                    child: Visibility(
-                      visible: _signUpInProgress == false,
-                      replacement: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: _signup,
-                        child: Icon(Icons.arrow_circle_right_outlined),
-                        style: formButtonStyle(),
-                      ),
+                    child:GetBuilder<RegistrationController>(
+                      builder: (registrationController) {
+                        return Visibility(
+                          visible: registrationController.signUpInProgress == false,
+                          replacement: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: _signup,
+                            style: formButtonStyle(),
+                            child: const Icon(Icons.arrow_circle_right_outlined),
+                          ),
+                        );
+                      }
                     )),
-                SizedBox(
+                const SizedBox(
                   height: 60,
                 ),
                 Row(
@@ -134,11 +138,7 @@ class _registrationScreenState extends State<registrationScreen> {
                         style: signUp(colorGreen),
                       ),
                       onTap: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const loginScreen()),
-                            (route) => false);
+                        Get.offAll(const loginScreen());
                       },
                     )
                   ],
@@ -154,32 +154,22 @@ class _registrationScreenState extends State<registrationScreen> {
   //Sign up request function
   Future<void> _signup() async {
     if (_formKey!.currentState!.validate()) {
-      _signUpInProgress = true;
-      if (mounted) {
-        setState(() {});
-      }
-      final NetworkResponse response =
-          await NetworkCaller().postRequest(Urls.registrationUrl, body: {
-        "email": _emailTEController.text.trim(),
-        "firstName": _firstNameTEController.text.trim(),
-        "lastName": _lastNameTEController.text.trim(),
-        "mobile": _mobileNameTEController.text,
-        "password": _passwordNameTEController.text.trim(),
-      });
-      _signUpInProgress = false;
-      if (mounted) {
-        setState(() {});
-      }
-      if (response.isSuccess) {
+      final response = await _registrationController.signup(
+          _emailTEController.text.trim(),
+          _firstNameTEController.text.trim(),
+          _lastNameTEController.text.trim(),
+          _mobileNameTEController.text.trim(),
+          _passwordNameTEController.text.trim());
+
+      if (response) {
         clearTextFields();
 
         if (mounted) {
-          showSnackMessage(
-              context, 'Account Has been Created! Please Sign In ');
+          showSnackMessage(context, _registrationController.message);
         }
       } else {
         if (mounted) {
-          showSnackMessage(context, 'Account Creation Failed !!', true);
+          showSnackMessage(context, _registrationController.message, true);
         }
       }
     }

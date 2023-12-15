@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:task_manager_app/ui/screens/loginScreen.dart';
-import 'package:task_manager_app/ui/screens/registrationScreen.dart';
 import 'package:task_manager_app/ui/screens/reset_password_screen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
 import 'package:task_manager_app/ui/widgets/smack_message.dart';
 import '../../Style/style.dart';
-import '../../data/network_caller/network_caller.dart';
-import '../../data/network_caller/network_response.dart';
-import '../../data/utility/urls.dart';
+import '../controller/forgot_password_controller.dart';
+import '../controller/pin_verification_controller.dart';
 
 class pin_verification_screen extends StatefulWidget {
   pin_verification_screen({super.key, required this.email});
@@ -21,6 +20,9 @@ class pin_verification_screen extends StatefulWidget {
 }
 
 class _pin_verification_screenState extends State<pin_verification_screen> {
+  final ForgotPasswordController _forgotPasswordController =
+      Get.find<ForgotPasswordController>();
+
   String enteredPin = '';
   bool otpLoader = false;
 
@@ -36,21 +38,21 @@ class _pin_verification_screenState extends State<pin_verification_screen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 80,
               ),
               Text(
                 'Pin Verification',
                 style: headlineForm(colorDarkBlue),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Text(
                 'Provide the 6 digit verification pin which was sent to your email address',
                 style: forgotPassword(colorLightGray),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               PinCodeTextField(
@@ -71,9 +73,6 @@ class _pin_verification_screenState extends State<pin_verification_screen> {
                 ),
                 animationDuration: const Duration(milliseconds: 300),
                 enableActiveFill: true,
-                onCompleted: (v) {
-                  print("Completed");
-                },
                 onChanged: (value) {
                   enteredPin = value;
                   setState(() {});
@@ -83,57 +82,49 @@ class _pin_verification_screenState extends State<pin_verification_screen> {
                 },
                 appContext: context,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               SizedBox(
                 width: double.infinity,
-                child: Visibility(
-                  replacement: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  visible: otpLoader == false,
-                  child: ElevatedButton(
-                    style: formButtonStyle(),
-                    onPressed: () async {
-                      otpLoader = true;
-                      if (mounted) {
-                        setState(() {});
-                      }
-                      final NetworkResponse response =
-                          await NetworkCaller().getRequest(
-                        Urls.verifyOTP(widget.email, enteredPin),
-                      );
-                      otpLoader = false;
-                      if (mounted) {
-                        setState(() {});
-                      }
-                      if (response.jsonResponse!['status'] == 'success') {
-                        if (mounted) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ResetPasswordScreen(
-                                        values: {
-                                          'email': widget.email,
-                                          'otp': enteredPin
-                                        },
-                                      )));
-                        }
-                      } else {
-                        if (mounted) {
-                          showSnackMessage(context, 'Invalid OTP',true);
-                        }
-                      }
-                    },
-                    child: const Text(
-                      'Verify',
-                      style: TextStyle(fontSize: 16),
+                child: GetBuilder<PinVerificationController>(
+                    builder: (pinVerificationController) {
+                  return Visibility(
+                    replacement: const Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                ),
+                    visible: pinVerificationController.otpLoader == false,
+                    child: ElevatedButton(
+                      style: formButtonStyle(),
+                      onPressed: () async {
+                        final response = await pinVerificationController
+                            .pinVerification(widget.email, enteredPin);
+
+                        if (response) {
+                          if (mounted) {
+                            Get.to(ResetPasswordScreen(
+                              values: {
+                                'email': widget.email,
+                                'otp': enteredPin
+                              },
+                            ));
+                          }
+                        } else {
+                          if (mounted) {
+                            showSnackMessage(context,
+                                pinVerificationController.failedMessage, true);
+                          }
+                        }
+                      },
+                      child: const Text(
+                        'Verify',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  );
+                }),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 60,
               ),
               Row(
@@ -150,10 +141,7 @@ class _pin_verification_screenState extends State<pin_verification_screen> {
                       style: signUp(colorGreen),
                     ),
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => loginScreen()));
+                      Get.to(const loginScreen());
                     },
                   )
                 ],

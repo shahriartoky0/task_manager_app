@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager_app/data/utility/urls.dart';
 import 'package:task_manager_app/ui/widgets/smack_message.dart';
 import '../../Style/style.dart';
@@ -77,8 +78,8 @@ class _TaskItemCardState extends State<TaskItemCard> {
                   width: 160,
                 ),
                 IconButton(
-                    onPressed: showUpdateStatusModal, icon: const Icon(Icons.edit)),
-                // IconButton(onPressed: (){}, icon: Icon(Icons.delete)),
+                    onPressed: showUpdateStatusModal,
+                    icon: const Icon(Icons.edit)),
               ],
             )
           ],
@@ -93,7 +94,7 @@ class _TaskItemCardState extends State<TaskItemCard> {
               title: Text(e.name),
               onTap: () {
                 updateTaskStatus(e.name);
-                Navigator.pop(context);
+                Get.back();
                 showSnackMessage(context, 'Task Edited as ${e.name}');
               },
             ))
@@ -113,7 +114,7 @@ class _TaskItemCardState extends State<TaskItemCard> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                     },
                     child: const Text(
                       'Cancel',

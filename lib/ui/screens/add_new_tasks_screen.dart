@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager_app/data/network_caller/network_caller.dart';
 import 'package:task_manager_app/data/network_caller/network_response.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
@@ -6,6 +7,7 @@ import 'package:task_manager_app/ui/widgets/profile_app_bar.dart';
 import 'package:task_manager_app/ui/widgets/smack_message.dart';
 import '../../Style/style.dart';
 import '../../data/utility/urls.dart';
+import '../controller/new_tasks_controller.dart';
 
 class AddNewTaskScreen extends StatefulWidget {
   const AddNewTaskScreen({super.key});
@@ -129,6 +131,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       }
 
       if (response.isSuccess) {
+        Get.find<NewTaskController>().getNewTaskList();
         if (mounted) {
           showSnackMessage(context,
               "Task Added Successfully");

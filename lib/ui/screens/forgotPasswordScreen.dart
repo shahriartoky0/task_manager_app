@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_app/ui/controller/forgot_password_controller.dart';
 import 'package:task_manager_app/ui/screens/loginScreen.dart';
-import 'package:task_manager_app/ui/screens/pin_verification_screen.dart';
-import 'package:task_manager_app/ui/screens/registrationScreen.dart';
 import 'package:task_manager_app/ui/widgets/bodyBackground.dart';
 import '../../Style/style.dart';
-import '../../data/network_caller/network_caller.dart';
-import '../../data/network_caller/network_response.dart';
-import '../../data/utility/urls.dart';
+
 
 class forgotPasswordScreen extends StatefulWidget {
   const forgotPasswordScreen({super.key});
@@ -18,7 +16,8 @@ class forgotPasswordScreen extends StatefulWidget {
 class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool forgotPasswordLoader = false ;
+  final ForgotPasswordController _forgotPasswordController =
+      Get.find<ForgotPasswordController>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,21 +33,21 @@ class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 80,
                 ),
                 Text(
                   'Your Email Address',
                   style: headlineForm(colorDarkBlue),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   'A 6 digit verification pin will send to your email address',
                   style: forgotPassword(colorLightGray),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
@@ -58,56 +57,33 @@ class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
                   },
                   decoration: const InputDecoration(labelText: 'Email'),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: Visibility(
-                    replacement: const Center(child: CircularProgressIndicator(),),
-                    visible: forgotPasswordLoader == false,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          forgotPasswordLoader = true ;
-                          if(mounted)
-                            {
-                              setState(() {});
+                  child: GetBuilder<ForgotPasswordController>(
+                    builder: (forgotPasswordController) {
+                      return Visibility(
+                        replacement: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        visible: forgotPasswordController.forgotPasswordLoader == false,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              _forgotPasswordController
+                                  .forgotPassword(_emailTEController.text.trim());
                             }
-
-                          final NetworkResponse response =
-                              await NetworkCaller().getRequest(
-                            Urls.verifyEmail(_emailTEController.text.trim()),
-                          );
-                          forgotPasswordLoader = false ;
-                          if(mounted)
-                          {
-                            setState(() {});
-                          }
-                          if (response.isSuccess) {
-                            print('jojo');
-                            if (mounted) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          pin_verification_screen(
-                                            email: _emailTEController.text.trim(),
-                                          )));
-                            }
-                          } else {
-                            print(_emailTEController.text.trim());
-                            print(response.statusCode);
-
-                          }
-                        }
-                      },
-                      child: Icon(Icons.arrow_circle_right_outlined),
-                      style: formButtonStyle(),
-                    ),
+                          },
+                          style: formButtonStyle(),
+                          child: const Icon(Icons.arrow_circle_right_outlined),
+                        ),
+                      );
+                    }
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 60,
                 ),
                 Row(
@@ -124,10 +100,8 @@ class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
                         style: signUp(colorGreen),
                       ),
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const loginScreen()));
+                        Get.to( const loginScreen());
+
                       },
                     )
                   ],
